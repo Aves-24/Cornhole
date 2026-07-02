@@ -28,17 +28,17 @@ function Stepper({
   return (
     <div className="flex flex-col items-center gap-1">
       <span className="text-xs text-slate-400">{label}</span>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="h-8 w-8 rounded-full bg-slate-800 hover:bg-slate-700"
+          className="h-11 w-11 shrink-0 rounded-full bg-slate-800 text-lg active:bg-slate-700 sm:h-9 sm:w-9 sm:text-base sm:hover:bg-slate-700"
         >
           −
         </button>
         <span className="w-5 text-center font-mono text-lg">{value}</span>
         <button
           onClick={() => onChange(Math.min(max, value + 1))}
-          className="h-8 w-8 rounded-full bg-slate-800 hover:bg-slate-700"
+          className="h-11 w-11 shrink-0 rounded-full bg-slate-800 text-lg active:bg-slate-700 sm:h-9 sm:w-9 sm:text-base sm:hover:bg-slate-700"
         >
           +
         </button>
@@ -67,17 +67,17 @@ export default function MatchScoring({ match, aName, bName, onRecordRound, onUnd
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-slate-800 bg-slate-900 p-5">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+    <div className="flex flex-col gap-5 rounded-xl border border-slate-800 bg-slate-900 p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-base font-semibold sm:text-lg">
           {aName} <span className="text-slate-500">vs</span> {bName}
         </h2>
-        <button onClick={onClose} className="text-slate-500 hover:text-slate-300">
+        <button onClick={onClose} className="shrink-0 p-1 text-slate-500 hover:text-slate-300">
           ✕
         </button>
       </div>
 
-      <div className="flex items-center justify-center gap-8">
+      <div className="flex items-center justify-center gap-6 sm:gap-8">
         <div className="text-center">
           <div className="text-3xl font-bold">{match.aTotal}</div>
           <div className="text-xs text-slate-400">{aName}</div>
@@ -96,10 +96,10 @@ export default function MatchScoring({ match, aName, bName, onRecordRound, onUnd
       ) : (
         <div className="flex flex-col gap-4">
           <div className="text-center text-sm text-slate-400">Runda {match.rounds.length + 1} — worki w dziurze / na tablicy</div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
             <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-950 p-3">
               <span className="text-sm font-medium">{aName}</span>
-              <div className="flex gap-4">
+              <div className="flex gap-4 sm:gap-4">
                 <Stepper label="Dziura (3pkt)" value={aHole} onChange={setAHole} max={4 - aBoard} />
                 <Stepper label="Tablica (1pkt)" value={aBoard} onChange={setABoard} max={4 - aHole} />
               </div>
@@ -107,7 +107,7 @@ export default function MatchScoring({ match, aName, bName, onRecordRound, onUnd
             </div>
             <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-950 p-3">
               <span className="text-sm font-medium">{bName}</span>
-              <div className="flex gap-4">
+              <div className="flex gap-4 sm:gap-4">
                 <Stepper label="Dziura (3pkt)" value={bHole} onChange={setBHole} max={4 - bBoard} />
                 <Stepper label="Tablica (1pkt)" value={bBoard} onChange={setBBoard} max={4 - bHole} />
               </div>
@@ -134,7 +134,10 @@ export default function MatchScoring({ match, aName, bName, onRecordRound, onUnd
           </div>
           <ul className="flex flex-col gap-1 text-sm">
             {match.rounds.map((r, i) => (
-              <li key={i} className="flex justify-between rounded bg-slate-950 px-3 py-1.5 text-slate-400">
+              <li
+                key={i}
+                className="flex flex-col gap-0.5 rounded bg-slate-950 px-3 py-1.5 text-slate-400 sm:flex-row sm:justify-between sm:gap-2"
+              >
                 <span>Runda {i + 1}</span>
                 <span>
                   {r.aHole}🕳 {r.aBoard}▭ ({roundPoints(r.aHole, r.aBoard)}) — {r.bHole}🕳 {r.bBoard}▭ ({roundPoints(r.bHole, r.bBoard)})

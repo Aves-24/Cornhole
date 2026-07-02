@@ -12,7 +12,7 @@ export default function ModeSelect({ playerCount, onSelect, onBack }: Props) {
   const canTeams = playerCount >= 4 && playerCount % 2 === 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-6">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-4 sm:p-6">
       <div>
         <h1 className="text-2xl font-bold">Tryb gry</h1>
         <p className="mt-1 text-slate-400">
