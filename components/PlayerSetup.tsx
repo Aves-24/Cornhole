@@ -37,7 +37,9 @@ export default function PlayerSetup({
   }
 
   const activeNames = new Set(players.map((p) => p.name.toLowerCase()));
-  const availableRoster = roster.filter((n) => !activeNames.has(n.toLowerCase()));
+  const availableRoster = roster
+    .filter((n) => !activeNames.has(n.toLowerCase()))
+    .sort((a, b) => a.localeCompare(b, "pl"));
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-4 sm:p-6">
@@ -61,36 +63,6 @@ export default function PlayerSetup({
           Dodaj
         </button>
       </div>
-
-      {availableRoster.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-            Zapisani gracze — dotknij, żeby dodać
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {availableRoster.map((n) => (
-              <span
-                key={n}
-                className="flex items-center gap-0.5 rounded-full border border-slate-700/60 bg-slate-900/80 py-1 pl-3 pr-1 text-sm transition hover:border-orange-500/50"
-              >
-                <button
-                  onClick={() => onAddFromRoster(n)}
-                  className="font-medium text-slate-200 transition hover:text-orange-400"
-                >
-                  + {n}
-                </button>
-                <button
-                  onClick={() => onForgetFromRoster(n)}
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-slate-600 transition hover:bg-slate-800 hover:text-red-400"
-                  aria-label={`Zapomnij ${n}`}
-                >
-                  ✕
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
 
       <ul className="flex flex-col gap-2">
         {players.map((p) => (
@@ -125,6 +97,36 @@ export default function PlayerSetup({
       >
         Dalej{players.length > 0 && ` · ${players.length} ${players.length === 1 ? "gracz" : "graczy"}`}
       </button>
+
+      {availableRoster.length > 0 && (
+        <div className="flex flex-col gap-2 border-t border-slate-800/60 pt-5">
+          <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
+            Zapisani gracze — dotknij, żeby dodać
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {availableRoster.map((n) => (
+              <span
+                key={n}
+                className="flex items-center gap-0.5 rounded-full border border-slate-700/60 bg-slate-900/80 py-1 pl-3 pr-1 text-sm transition hover:border-orange-500/50"
+              >
+                <button
+                  onClick={() => onAddFromRoster(n)}
+                  className="font-medium text-slate-200 transition hover:text-orange-400"
+                >
+                  + {n}
+                </button>
+                <button
+                  onClick={() => onForgetFromRoster(n)}
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-slate-600 transition hover:bg-slate-800 hover:text-red-400"
+                  aria-label={`Zapomnij ${n}`}
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
