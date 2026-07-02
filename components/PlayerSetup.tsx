@@ -13,6 +13,12 @@ interface Props {
   onContinue: () => void;
 }
 
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
 export default function PlayerSetup({
   players,
   roster,
@@ -35,9 +41,9 @@ export default function PlayerSetup({
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-4 sm:p-6">
-      <div>
-        <h1 className="text-2xl font-bold">Turniej Cornhole</h1>
-        <p className="mt-1 text-slate-400">Dodaj imiona graczy, którzy będą grać.</p>
+      <div className="pt-2 text-center sm:pt-6">
+        <h1 className="text-3xl font-bold tracking-tight">Kto gra?</h1>
+        <p className="mt-2 text-slate-400">Dodaj wszystkich, którzy staną dziś przy tablicy.</p>
       </div>
 
       <div className="flex gap-2">
@@ -45,12 +51,12 @@ export default function PlayerSetup({
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder="Imię gracza"
-          className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 outline-none focus:border-orange-500"
+          placeholder="Imię gracza…"
+          className="h-12 flex-1 rounded-xl border border-slate-700/80 bg-slate-900/80 px-4 outline-none transition placeholder:text-slate-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
         />
         <button
           onClick={submit}
-          className="rounded-lg bg-orange-600 px-4 py-2 font-medium hover:bg-orange-500"
+          className="h-12 rounded-xl bg-gradient-to-b from-orange-500 to-orange-600 px-5 font-semibold text-white shadow-lg shadow-orange-950/40 transition hover:from-orange-400 hover:to-orange-500 active:scale-95"
         >
           Dodaj
         </button>
@@ -58,19 +64,24 @@ export default function PlayerSetup({
 
       {availableRoster.length > 0 && (
         <div className="flex flex-col gap-2">
-          <span className="text-sm text-slate-400">Zapisani gracze — dotknij, żeby dodać</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
+            Zapisani gracze — dotknij, żeby dodać
+          </span>
           <div className="flex flex-wrap gap-2">
             {availableRoster.map((n) => (
               <span
                 key={n}
-                className="flex items-center gap-1 rounded-full bg-slate-900 pl-4 pr-2 py-2 text-sm"
+                className="flex items-center gap-0.5 rounded-full border border-slate-700/60 bg-slate-900/80 py-1 pl-3 pr-1 text-sm transition hover:border-orange-500/50"
               >
-                <button onClick={() => onAddFromRoster(n)} className="font-medium hover:text-orange-400">
-                  {n}
+                <button
+                  onClick={() => onAddFromRoster(n)}
+                  className="font-medium text-slate-200 transition hover:text-orange-400"
+                >
+                  + {n}
                 </button>
                 <button
                   onClick={() => onForgetFromRoster(n)}
-                  className="rounded-full px-1.5 text-slate-500 hover:text-red-400"
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-slate-600 transition hover:bg-slate-800 hover:text-red-400"
                   aria-label={`Zapomnij ${n}`}
                 >
                   ✕
@@ -82,18 +93,18 @@ export default function PlayerSetup({
       )}
 
       <ul className="flex flex-col gap-2">
-        {players.map((p, i) => (
+        {players.map((p) => (
           <li
             key={p.id}
-            className="flex items-center justify-between rounded-lg bg-slate-900 px-4 py-2"
+            className="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-900/60 px-3 py-2.5"
           >
-            <span>
-              <span className="mr-2 text-slate-500">{i + 1}.</span>
-              {p.name}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-xs font-bold text-white">
+              {initials(p.name)}
             </span>
+            <span className="min-w-0 flex-1 truncate font-medium">{p.name}</span>
             <button
               onClick={() => onRemove(p.id)}
-              className="text-slate-500 hover:text-red-400"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-800 hover:text-red-400"
               aria-label={`Usuń ${p.name}`}
             >
               ✕
@@ -101,8 +112,8 @@ export default function PlayerSetup({
           </li>
         ))}
         {players.length === 0 && (
-          <li className="rounded-lg border border-dashed border-slate-800 px-4 py-6 text-center text-slate-500">
-            Brak graczy — dodaj przynajmniej dwóch.
+          <li className="rounded-xl border border-dashed border-slate-800 px-4 py-8 text-center text-sm text-slate-500">
+            Jeszcze nikogo nie ma — dodaj przynajmniej dwie osoby.
           </li>
         )}
       </ul>
@@ -110,9 +121,9 @@ export default function PlayerSetup({
       <button
         onClick={onContinue}
         disabled={players.length < 2}
-        className="rounded-lg bg-orange-600 px-4 py-3 font-semibold hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500"
+        className="rounded-xl bg-gradient-to-b from-orange-500 to-orange-600 px-4 py-3.5 font-semibold text-white shadow-lg shadow-orange-950/40 transition hover:from-orange-400 hover:to-orange-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 disabled:shadow-none"
       >
-        Dalej ({players.length} {players.length === 1 ? "gracz" : "graczy"})
+        Dalej{players.length > 0 && ` · ${players.length} ${players.length === 1 ? "gracz" : "graczy"}`}
       </button>
     </div>
   );

@@ -13,37 +13,50 @@ export default function ModeSelect({ playerCount, onSelect, onBack }: Props) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 p-4 sm:p-6">
-      <div>
-        <h1 className="text-2xl font-bold">Tryb gry</h1>
-        <p className="mt-1 text-slate-400">
-          Gracie każdy na własną rękę, czy w drużynach 2 na 2?
-        </p>
+      <div className="pt-2 text-center sm:pt-6">
+        <h1 className="text-3xl font-bold tracking-tight">Tryb gry</h1>
+        <p className="mt-2 text-slate-400">Każdy na własną rękę, czy w parach?</p>
       </div>
 
       <div className="flex flex-col gap-3">
         <button
           onClick={() => onSelect("solo")}
-          className="rounded-lg bg-slate-900 px-4 py-4 text-left hover:bg-slate-800"
+          className="group flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-left transition hover:border-orange-500/50 hover:bg-slate-900"
         >
-          <div className="font-semibold">Każdy gra osobno</div>
-          <div className="text-sm text-slate-400">{playerCount} uczestników w drabince</div>
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-2xl transition group-hover:bg-orange-500/15">
+            🙋
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">Każdy gra osobno</span>
+            <span className="block text-sm text-slate-400">{playerCount} uczestników w drabince</span>
+          </span>
+          <span className="text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-orange-400">→</span>
         </button>
 
         <button
           onClick={() => canTeams && onSelect("teams")}
           disabled={!canTeams}
-          className="rounded-lg bg-slate-900 px-4 py-4 text-left hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+          className="group flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-left transition enabled:hover:border-orange-500/50 enabled:hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <div className="font-semibold">Drużyny (2 na 2)</div>
-          <div className="text-sm text-slate-400">
-            {canTeams
-              ? `${playerCount / 2} drużyn w drabince`
-              : "Potrzeba parzystej liczby graczy (min. 4)"}
-          </div>
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-2xl transition group-hover:bg-orange-500/15">
+            👥
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">Drużyny 2 na 2</span>
+            <span className="block text-sm text-slate-400">
+              {canTeams
+                ? `${playerCount / 2} drużyn w drabince`
+                : "Potrzeba parzystej liczby graczy (min. 4)"}
+            </span>
+          </span>
+          <span className="text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-orange-400">→</span>
         </button>
       </div>
 
-      <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-300">
+      <button
+        onClick={onBack}
+        className="self-center text-sm text-slate-500 transition hover:text-slate-300"
+      >
         ← Wróć do listy graczy
       </button>
     </div>

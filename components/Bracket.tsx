@@ -16,7 +16,7 @@ function nameOf(participants: Participant[], id: string | null): string {
   return participants.find((p) => p.id === id)?.name ?? "?";
 }
 
-function roundLabel(round: number, totalRounds: number): string {
+export function roundLabel(round: number, totalRounds: number): string {
   const fromEnd = totalRounds - round;
   if (fromEnd === 1) return "Finał";
   if (fromEnd === 2) return "Półfinał";
@@ -47,37 +47,44 @@ function MatchCard({ match: m, participants, isActive, onSelectMatch, size }: Ca
   const playable = !!m.aId && !!m.bId && !m.isBye;
   const large = size === "large";
 
+  function row(id: string | null, name: string, total: number, emptyLabel: string) {
+    const won = !!m.winnerId && m.winnerId === id;
+    const lost = !!m.winnerId && !!id && m.winnerId !== id;
+    return (
+      <div className={`flex items-center justify-between gap-2 ${lost ? "opacity-50" : ""}`}>
+        <span className={`truncate ${won ? "font-semibold text-orange-400" : ""}`}>
+          {won && !m.isBye && <span className="mr-1">🏆</span>}
+          {id ? name : emptyLabel}
+        </span>
+        {m.rounds.length > 0 && (
+          <span className={`font-mono tabular-nums ${won ? "font-semibold text-orange-400" : "text-slate-400"}`}>
+            {total}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <button
       onClick={() => playable && onSelectMatch(m.id)}
       disabled={!playable}
-      className={`flex w-full flex-col gap-1 rounded-lg border text-left transition ${
-        large ? "px-4 py-3 text-base" : "px-3 py-2 text-sm"
+      className={`flex w-full flex-col gap-1.5 rounded-xl border text-left transition ${
+        large ? "px-4 py-3 text-base" : "px-3 py-2.5 text-sm"
       } ${
         isActive
-          ? "border-orange-500 bg-orange-600/10"
+          ? "border-orange-500/70 bg-orange-500/10 ring-1 ring-orange-500/30"
           : playable
-          ? "border-slate-700 bg-slate-900 hover:border-slate-500 active:bg-slate-800"
-          : "border-slate-800 bg-slate-950 text-slate-500"
+          ? "border-slate-700/70 bg-slate-900/70 hover:border-orange-500/40 hover:bg-slate-900 active:scale-[0.99]"
+          : "border-slate-800/60 bg-slate-950/50 text-slate-500"
       }`}
     >
-      <div
-        className={`flex justify-between ${
-          m.winnerId && m.winnerId === m.aId ? "font-semibold text-orange-400" : ""
-        }`}
-      >
-        <span>{m.aId ? aName : "—"}</span>
-        {m.rounds.length > 0 && <span>{m.aTotal}</span>}
-      </div>
-      <div
-        className={`flex justify-between ${
-          m.winnerId && m.winnerId === m.bId ? "font-semibold text-orange-400" : ""
-        }`}
-      >
-        <span>{m.bId ? bName : m.isBye ? "" : "—"}</span>
-        {m.rounds.length > 0 && <span>{m.bTotal}</span>}
-      </div>
+      {row(m.aId, aName, m.aTotal, "—")}
+      {row(m.bId, bName, m.bTotal, m.isBye ? "" : "—")}
       {m.isBye && <div className="text-xs italic text-slate-600">wolny los</div>}
+      {isActive && !m.winnerId && (
+        <div className="text-[10px] font-medium uppercase tracking-wider text-orange-500">● trwa</div>
+      )}
     </button>
   );
 }
@@ -106,10 +113,10 @@ export default function Bracket({ matches, totalRounds, participants, activeMatc
               <button
                 key={r}
                 onClick={() => setSelectedRound(r)}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition active:scale-95 ${
                   r === selectedRound
-                    ? "bg-orange-600 text-white"
-                    : "bg-slate-900 text-slate-400 hover:text-slate-200"
+                    ? "bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-md shadow-orange-950/40"
+                    : "border border-slate-800 bg-slate-900/70 text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {done && r !== selectedRound && <span className="mr-1 text-orange-500">✓</span>}
